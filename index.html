@@ -1,0 +1,2963 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#05070f" />
+    <title>Digihood Studio</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg0: #05070f;
+        --bg1: #070b17;
+        --bg2: #0a1026;
+
+        --glass0: rgba(255, 255, 255, 0.06);
+        --glass1: rgba(255, 255, 255, 0.03);
+        --border: rgba(255, 255, 255, 0.1);
+
+        --a1: #38bdf8; /* sky-400 */
+        --a2: #2563eb; /* blue-600 */
+        --a3: #1e40af; /* blue-800 */
+
+        --brand0: #05070f;
+        --brand1: #071b36;
+        --brand2: #0b3a6a;
+
+        /* Webflow commonly uses Inter as its default UI font */
+        --font-body:
+          "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+          "Apple Color Emoji", "Segoe UI Emoji";
+        --font-display:
+          "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: var(--font-body);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        overflow-x: hidden;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      .font-display {
+        font-family: var(--font-display);
+        letter-spacing: -0.02em;
+      }
+
+      /* Better anchor fallback (keeps top alignment perfect under fixed nav) */
+      section {
+        scroll-margin-top: 90px;
+      }
+
+      /* Premium dark backdrop */
+      body {
+        background:
+          radial-gradient(
+            1200px circle at 12% 20%,
+            rgba(56, 189, 248, 0.11),
+            transparent 55%
+          ),
+          radial-gradient(
+            900px circle at 85% 30%,
+            rgba(37, 99, 235, 0.12),
+            transparent 55%
+          ),
+          linear-gradient(180deg, var(--bg0), var(--bg1) 44%, var(--bg0) 100%);
+      }
+
+      /* Subtle animated "atmosphere" (GPU-friendly) */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(
+            900px circle at var(--cursorX, 18%) var(--cursorY, 22%),
+            rgba(56, 189, 248, 0.08),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px circle at var(--cursorX2, 82%) var(--cursorY2, 44%),
+            rgba(37, 99, 235, 0.09),
+            transparent 60%
+          );
+        opacity: 0.9;
+        mix-blend-mode: screen;
+        transition: opacity 600ms ease;
+      }
+
+      /* Ultra subtle grain */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image: radial-gradient(
+          rgba(255, 255, 255, 0.05) 1px,
+          transparent 1px
+        );
+        background-size: 3px 3px;
+        opacity: 0.045;
+        transform: translateZ(0);
+      }
+
+      ::selection {
+        background: rgba(56, 189, 248, 0.25);
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* Accent system */
+      .gradient-text {
+        background: linear-gradient(
+          135deg,
+          var(--a1) 0%,
+          var(--a2) 55%,
+          var(--a3) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        background-size: 220% 220%;
+        animation: gradientShift 12s ease infinite;
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--a1) 0%,
+          var(--a2) 55%,
+          var(--a3) 100%
+        );
+        background-size: 220% 220%;
+        animation: gradientShift 12s ease infinite;
+        box-shadow:
+          0 18px 40px rgba(37, 99, 235, 0.22),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+        cursor: pointer;
+      }
+
+      button,
+      [role="button"],
+      input[type="submit"] {
+        cursor: pointer;
+      }
+      .btn-primary:hover {
+        filter: brightness(1.06);
+      }
+
+      /* Form select placeholder (grey + unselectable) */
+      .select-field {
+        color: rgba(229, 231, 235, 1); /* text-gray-200 */
+      }
+      .select-field:invalid {
+        color: rgba(156, 163, 175, 1); /* text-gray-400 */
+      }
+      .select-field option {
+        color: rgba(229, 231, 235, 1);
+        background-color: #070b17;
+      }
+      .select-field option[disabled] {
+        color: rgba(156, 163, 175, 1);
+      }
+
+      .brand-badge {
+        background: linear-gradient(
+          135deg,
+          var(--brand0) 0%,
+          var(--brand1) 55%,
+          var(--brand2) 100%
+        );
+        background-size: 220% 220%;
+        animation: gradientShift 18s ease infinite;
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+          0 16px 34px rgba(0, 0, 0, 0.35);
+      }
+
+      .hero-gradient {
+        background:
+          radial-gradient(
+            900px circle at 18% 20%,
+            rgba(56, 189, 248, 0.12),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px circle at 82% 55%,
+            rgba(37, 99, 235, 0.1),
+            transparent 60%
+          ),
+          linear-gradient(135deg, var(--bg0) 0%, var(--bg2) 55%, #070e24 100%);
+      }
+
+      .card-gradient {
+        background: linear-gradient(
+          145deg,
+          var(--glass0) 0%,
+          var(--glass1) 100%
+        );
+      }
+
+      .glow {
+        box-shadow: 0 0 70px rgba(37, 99, 235, 0.25);
+      }
+
+      /* ----------------------------
+         Hero visual: 3D building blocks + Rubik cube
+         (pure CSS transforms, continuous + subtle)
+         ---------------------------- */
+      .hero-visual {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 320px;
+        overflow: hidden;
+        background: radial-gradient(
+          900px circle at 40% 35%,
+          rgba(56, 189, 248, 0.08),
+          transparent 55%
+        );
+      }
+
+      /* Canvas hero visual (reliable locally, no dependencies) */
+      .hero-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .hero-visual::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(
+            600px circle at 20% 30%,
+            rgba(56, 189, 248, 0.18),
+            transparent 55%
+          ),
+          radial-gradient(
+            520px circle at 85% 55%,
+            rgba(37, 99, 235, 0.18),
+            transparent 60%
+          );
+        opacity: 0.9;
+      }
+
+      .hero-visual-scene {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        perspective: 1400px;
+        transform: translateZ(0);
+      }
+
+      /* Slight responsive scale for the 3D scene */
+      @media (max-width: 1280px) {
+        .staircase {
+          transform: translate3d(-170px, 120px, -150px) scale(0.92);
+        }
+        .rubik {
+          --cs: 82px;
+        }
+      }
+
+      .iso-base {
+        transform-style: preserve-3d;
+        transform: rotateX(58deg) rotateZ(45deg);
+        will-change: transform;
+      }
+
+      .iso-anim {
+        position: relative;
+        transform-style: preserve-3d;
+        animation: isoDrift 7.2s ease-in-out infinite;
+      }
+
+      @keyframes isoDrift {
+        0%,
+        100% {
+          transform: translateY(0px) rotateY(-8deg);
+        }
+        50% {
+          transform: translateY(-10px) rotateY(8deg);
+        }
+      }
+
+      .staircase {
+        position: relative;
+        width: 560px;
+        height: 560px;
+        transform-style: preserve-3d;
+        /* Default placement: keep centered so it can't disappear off-canvas */
+        transform: translate3d(0px, 140px, -150px);
+      }
+
+      /* Mobile/tablet: center the scene so it’s always visible */
+      @media (max-width: 1023px) {
+        .staircase {
+          transform: translate3d(0px, 150px, -140px) scale(0.78);
+        }
+        .hero-visual-caption {
+          left: 12px;
+          right: 12px;
+          max-width: none;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .staircase {
+          transform: translate3d(0px, 160px, -140px) scale(0.68);
+        }
+      }
+
+      .cube {
+        --sz: 62px;
+        position: absolute;
+        width: var(--sz);
+        height: var(--sz);
+        transform-style: preserve-3d;
+        transform: translate3d(var(--x), var(--y), var(--z));
+        will-change: transform;
+      }
+
+      .cube.step {
+        animation: stepBob 6.8s ease-in-out infinite;
+        animation-delay: calc(var(--i) * -0.35s);
+      }
+
+      @keyframes stepBob {
+        0%,
+        100% {
+          transform: translate3d(var(--x), var(--y), var(--z)) translateY(0px);
+        }
+        50% {
+          transform: translate3d(var(--x), var(--y), var(--z)) translateY(-6px);
+        }
+      }
+
+      .cube .face {
+        position: absolute;
+        inset: 0;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backface-visibility: hidden;
+      }
+
+      .cube .front {
+        transform: translateZ(calc(var(--sz) / 2));
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.1),
+          rgba(255, 255, 255, 0.03)
+        );
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+      }
+
+      .cube .right {
+        transform: rotateY(90deg) translateZ(calc(var(--sz) / 2));
+        background: linear-gradient(
+          180deg,
+          rgba(37, 99, 235, 0.24),
+          rgba(30, 64, 175, 0.1)
+        );
+      }
+
+      .cube .top {
+        transform: rotateX(90deg) translateZ(calc(var(--sz) / 2));
+        background: linear-gradient(
+          180deg,
+          rgba(56, 189, 248, 0.22),
+          rgba(255, 255, 255, 0.06)
+        );
+      }
+
+      .cube .face::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        background: radial-gradient(
+          120px circle at 30% 25%,
+          rgba(255, 255, 255, 0.14),
+          transparent 60%
+        );
+        opacity: 0.8;
+      }
+
+      .runner {
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border-radius: 9999px;
+        transform-style: preserve-3d;
+        background: radial-gradient(
+          circle at 30% 30%,
+          rgba(255, 255, 255, 0.95),
+          rgba(56, 189, 248, 0.95) 24%,
+          rgba(56, 189, 248, 0) 70%
+        );
+        box-shadow:
+          0 0 30px rgba(56, 189, 248, 0.55),
+          0 0 70px rgba(37, 99, 235, 0.35);
+        animation: runnerClimb 5.6s linear infinite;
+        will-change: transform;
+      }
+
+      @keyframes runnerClimb {
+        0% {
+          transform: translate3d(28px, -24px, 58px);
+        }
+        16% {
+          transform: translate3d(92px, -24px, 102px);
+        }
+        32% {
+          transform: translate3d(156px, -24px, 146px);
+        }
+        48% {
+          transform: translate3d(220px, -24px, 190px);
+        }
+        64% {
+          transform: translate3d(284px, -24px, 234px);
+        }
+        80% {
+          transform: translate3d(348px, -24px, 278px);
+        }
+        100% {
+          transform: translate3d(28px, -24px, 58px);
+        }
+      }
+
+      .rubik-wrap {
+        position: absolute;
+        transform-style: preserve-3d;
+        transform: translate3d(var(--x), var(--y), var(--z));
+        filter: drop-shadow(0 24px 28px rgba(0, 0, 0, 0.45));
+      }
+
+      .rubik {
+        --cs: 90px;
+        --half: calc(var(--cs) / 2);
+        position: relative;
+        width: var(--cs);
+        height: var(--cs);
+        transform-style: preserve-3d;
+        animation: rubikSpin 10.5s linear infinite;
+        will-change: transform;
+      }
+
+      @keyframes rubikSpin {
+        0% {
+          transform: rotateX(25deg) rotateY(25deg);
+        }
+        50% {
+          transform: rotateX(65deg) rotateY(205deg);
+        }
+        100% {
+          transform: rotateX(25deg) rotateY(385deg);
+        }
+      }
+
+      .rubik .rface {
+        position: absolute;
+        inset: 0;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background:
+          linear-gradient(var(--c), var(--c)),
+          repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.55) 0 2px,
+            transparent 2px 30px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.55) 0 2px,
+            transparent 2px 30px
+          ),
+          radial-gradient(
+            120px circle at 25% 20%,
+            rgba(255, 255, 255, 0.22),
+            transparent 58%
+          );
+        background-blend-mode: overlay, normal, normal, screen;
+        backface-visibility: hidden;
+      }
+
+      .rubik .front {
+        --c: rgba(56, 189, 248, 0.95);
+        transform: translateZ(var(--half));
+      }
+      .rubik .back {
+        --c: rgba(30, 64, 175, 0.65);
+        transform: rotateY(180deg) translateZ(var(--half));
+      }
+      .rubik .right {
+        --c: rgba(37, 99, 235, 0.95);
+        transform: rotateY(90deg) translateZ(var(--half));
+      }
+      .rubik .left {
+        --c: rgba(14, 165, 233, 0.65);
+        transform: rotateY(-90deg) translateZ(var(--half));
+      }
+      .rubik .top {
+        --c: rgba(255, 255, 255, 0.1);
+        transform: rotateX(90deg) translateZ(var(--half));
+      }
+      .rubik .bottom {
+        --c: rgba(5, 7, 15, 0.95);
+        transform: rotateX(-90deg) translateZ(var(--half));
+      }
+
+      .hero-visual-caption {
+        position: absolute;
+        left: 18px;
+        bottom: 16px;
+        z-index: 2;
+        max-width: 260px;
+        background: rgba(5, 7, 15, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 10px 12px;
+        backdrop-filter: blur(12px);
+      }
+
+      .hero-visual-caption .kicker {
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: rgba(148, 163, 184, 1);
+      }
+
+      /*
+        3D / FX system
+        - "fx-card" combines reveal + tilt (tilt only activates on desktop pointers)
+        - no direct transform overrides (all via CSS variables)
+      */
+      .fx-card {
+        position: relative;
+        transform-style: preserve-3d;
+        will-change: transform;
+        isolation: isolate;
+
+        /* reveal defaults */
+        opacity: 0;
+        --revealY: 18px;
+        --revealRX: 7deg;
+        --revealScale: 0.985;
+
+        /* tilt defaults */
+        --tiltX: 0deg;
+        --tiltY: 0deg;
+
+        /* hover lift defaults */
+        --liftY: 0px;
+
+        /* press */
+        --press: 1;
+
+        /* shine */
+        --shine: 0;
+        --mx: 50%;
+        --my: 40%;
+
+        transform: perspective(1100px)
+          rotateX(calc(var(--tiltX) + var(--revealRX))) rotateY(var(--tiltY))
+          translateY(calc(var(--revealY) + var(--liftY)))
+          scale(var(--revealScale)) scale(var(--press));
+
+        transition:
+          opacity 700ms ease,
+          transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
+          box-shadow 300ms ease,
+          border-color 300ms ease,
+          filter 250ms ease;
+      }
+
+      .fx-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        opacity: var(--shine);
+        transition: opacity 180ms ease;
+        background: radial-gradient(
+          600px circle at var(--mx) var(--my),
+          rgba(255, 255, 255, 0.16),
+          transparent 50%
+        );
+        mix-blend-mode: screen;
+        z-index: 0;
+      }
+
+      .fx-card > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .fx-card.is-visible {
+        opacity: 1;
+        --revealY: 0px;
+        --revealRX: 0deg;
+        --revealScale: 1;
+      }
+
+      /* After reveal completes, make hover interactions snappier */
+      .fx-card.fx-live {
+        transition:
+          transform 170ms cubic-bezier(0.2, 0.8, 0.2, 1),
+          box-shadow 300ms ease,
+          border-color 300ms ease,
+          filter 250ms ease;
+      }
+
+      .service-card:hover {
+        --liftY: -10px;
+        box-shadow: 0 25px 60px rgba(37, 99, 235, 0.2);
+      }
+
+      /* Subtle idle motion (starts only after reveal; animates --liftY so it won't fight 3D tilt) */
+      .service-card.fx-live {
+        animation: cardDriftVar 10.5s ease-in-out infinite;
+      }
+      .service-card.fx-live:nth-child(2n) {
+        animation-duration: 11.8s;
+        animation-delay: -2.3s;
+      }
+      .service-card.fx-live:nth-child(3n) {
+        animation-duration: 12.6s;
+        animation-delay: -4.1s;
+      }
+      .service-card.fx-live:nth-child(5n) {
+        animation-duration: 13.5s;
+        animation-delay: -3.2s;
+      }
+
+      @keyframes cardDriftVar {
+        0%,
+        100% {
+          --liftY: 0px;
+        }
+        50% {
+          --liftY: -6px;
+        }
+      }
+
+      .floating {
+        animation: float 6s ease-in-out infinite;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+      }
+
+      .pulse-glow {
+        animation: pulseGlow 2.2s ease-in-out infinite;
+      }
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          box-shadow: 0 0 18px rgba(56, 189, 248, 0.28);
+        }
+        50% {
+          box-shadow: 0 0 42px rgba(37, 99, 235, 0.45);
+        }
+      }
+
+      /* ----------------------------
+         Active nav (scroll spy)
+         ---------------------------- */
+      .nav-link {
+        position: relative;
+        border-radius: 9999px !important;
+        isolation: isolate;
+      }
+
+      .nav-link::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        border-radius: inherit;
+        border: 2px solid transparent;
+
+        /* Gradient border without masks (avoids editor warnings, keeps radius support) */
+        background:
+          linear-gradient(rgba(5, 7, 15, 0.9), rgba(5, 7, 15, 0.9)) padding-box,
+          linear-gradient(
+              135deg,
+              var(--a1) 0%,
+              var(--a2) 45%,
+              var(--a3) 70%,
+              var(--a1) 100%
+            )
+            border-box;
+        background-size:
+          100% 100%,
+          300% 300%;
+
+        opacity: 0;
+        transition: opacity 250ms ease;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .nav-link:hover::before {
+        opacity: 0.55;
+      }
+
+      .nav-link.nav-active::before {
+        opacity: 1;
+        animation: navBorderShift 3.5s ease infinite;
+      }
+
+      .nav-link.nav-active {
+        text-shadow: 0 0 22px rgba(56, 189, 248, 0.22);
+      }
+
+      @keyframes navBorderShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* Scroll progress */
+      #scrollProgress {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 2px;
+        width: 0%;
+        background: linear-gradient(90deg, var(--a1), var(--a2), var(--a3));
+        background-size: 220% 220%;
+        animation: gradientShift 12s ease infinite;
+        opacity: 0.9;
+      }
+
+      /* Reduced motion: keep things premium but respectful */
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        body::before,
+        body::after {
+          display: none;
+        }
+        .floating,
+        .pulse-glow,
+        .btn-primary,
+        .brand-badge,
+        .gradient-text,
+        #scrollProgress,
+        .nav-link.nav-active::before,
+        .service-card.fx-live,
+        .iso-anim,
+        .rubik,
+        .runner {
+          animation: none !important;
+        }
+        .fx-card {
+          transition: none !important;
+          transform: none !important;
+          opacity: 1 !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="text-white">
+    <!-- Navigation -->
+    <nav
+      id="navbar"
+      class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+    >
+      <div id="scrollProgress"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+        <div class="flex items-center justify-between">
+          <a href="/" data-route="/home" class="flex items-center gap-3">
+            <div
+              class="brand-badge w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg overflow-hidden select-none"
+              title='Put your logo file named "digilogo.png" next to index.html'
+            >
+              <img
+                class="company-logo w-full h-full object-contain p-1.5"
+                src="digilogo.png"
+                alt="Company logo"
+                onerror="
+                  this.classList.add('hidden');
+                  this.parentElement
+                    .querySelector('.logo-fallback')
+                    .classList.remove('hidden');
+                "
+              />
+              <span class="logo-fallback hidden">D</span>
+            </div>
+            <div>
+              <span class="text-lg sm:text-xl font-bold font-display"
+                >Digihood</span
+              >
+              <span class="text-lg sm:text-xl font-light text-sky-400"
+                >Studio</span
+              >
+            </div>
+          </a>
+
+          <div class="hidden md:flex items-center gap-8">
+            <a
+              href="/home"
+              data-route="/home"
+              class="nav-link text-gray-300 hover:text-white transition px-4 py-2"
+              >Home</a
+            >
+            <a
+              href="/services"
+              data-route="/services"
+              class="nav-link text-gray-300 hover:text-white transition px-4 py-2"
+              >Services</a
+            >
+            <a
+              href="/about"
+              data-route="/about"
+              class="nav-link text-gray-300 hover:text-white transition px-4 py-2"
+              >About</a
+            >
+            <a
+              href="/contact"
+              data-route="/contact"
+              class="nav-link text-gray-300 hover:text-white transition px-4 py-2"
+              >Contact</a
+            >
+
+            <a
+              href="/contact"
+              data-route="/contact"
+              class="btn-primary px-6 py-2.5 rounded-full font-medium transition"
+              >Get Started</a
+            >
+          </div>
+
+          <button
+            id="menuBtn"
+            class="md:hidden text-white"
+            aria-label="Open menu"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div
+        id="mobileMenu"
+        class="hidden md:hidden bg-[#05070f]/92 backdrop-blur-lg border-t border-white/10"
+      >
+        <div class="px-4 sm:px-6 py-4 flex flex-col gap-4">
+          <a
+            href="/home"
+            data-route="/home"
+            class="nav-link text-gray-300 hover:text-white transition py-2 px-4"
+            >Home</a
+          >
+          <a
+            href="/services"
+            data-route="/services"
+            class="nav-link text-gray-300 hover:text-white transition py-2 px-4"
+            >Services</a
+          >
+          <a
+            href="/about"
+            data-route="/about"
+            class="nav-link text-gray-300 hover:text-white transition py-2 px-4"
+            >About</a
+          >
+          <a
+            href="/contact"
+            data-route="/contact"
+            class="nav-link text-gray-300 hover:text-white transition py-2 px-4"
+            >Contact</a
+          >
+
+          <a
+            href="/contact"
+            data-route="/contact"
+            class="btn-primary px-6 py-2.5 rounded-full font-medium text-center transition"
+            >Get Started</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section
+      id="home"
+      class="hero-gradient min-h-[92vh] md:min-h-[94vh] flex items-start relative overflow-hidden"
+    >
+      <div class="absolute inset-0 overflow-hidden">
+        <div
+          class="absolute -top-10 -left-16 sm:top-1/4 sm:left-1/4 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-sky-500/15 rounded-full blur-3xl floating"
+        ></div>
+        <div
+          class="absolute bottom-0 right-0 sm:bottom-1/4 sm:right-1/4 w-56 h-56 sm:w-72 sm:h-72 lg:w-80 lg:h-80 bg-blue-500/15 rounded-full blur-3xl floating"
+          style="animation-delay: -3s"
+        ></div>
+        <div
+          class="hidden sm:block absolute top-1/2 right-1/3 w-48 h-48 md:w-64 md:h-64 bg-indigo-500/10 rounded-full blur-3xl floating"
+          style="animation-delay: -1.5s"
+        ></div>
+      </div>
+
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 pt-16 pb-10 md:pt-20 md:pb-12 relative z-10"
+      >
+        <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <div>
+            <div
+              class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 mb-6"
+            >
+              <span
+                class="w-2 h-2 bg-sky-400 rounded-full animate-pulse"
+              ></span>
+              <span class="text-sm text-gray-300"
+                >Digital Marketing Agency in Kathmandu</span
+              >
+            </div>
+
+            <h1
+              class="font-bold leading-tight mb-6 text-3xl sm:text-4xl md:text-5xl"
+            >
+              <span class="gradient-text block">Building Blocks</span>
+              <span
+                class="text-white block mt-1 text-3xl sm:text-4xl md:text-5xl"
+                >For Your Digital Success</span
+              >
+            </h1>
+
+            <p
+              class="text-base sm:text-lg md:text-xl text-gray-400 mb-8 leading-relaxed"
+            >
+              We craft powerful digital strategies that transform your brand's
+              online presence. From SEO to social media, we are your one-stop
+              solution for digital growth.
+            </p>
+
+            <div class="flex flex-wrap gap-4">
+              <a
+                href="/contact"
+                data-route="/contact"
+                class="btn-primary px-8 py-4 rounded-full font-semibold transition inline-flex items-center gap-2 pulse-glow"
+              >
+                Start Your Project
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
+              <a
+                href="/services"
+                data-route="/services"
+                class="border border-white/20 px-8 py-4 rounded-full font-semibold hover:bg-white/5 transition"
+              >
+                View Our Services
+              </a>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-6 sm:gap-8 mt-10">
+              <div>
+                <div class="text-2xl sm:text-3xl font-bold gradient-text">
+                  10+
+                </div>
+                <div class="text-gray-400 text-xs sm:text-sm">
+                  Happy Clients
+                </div>
+              </div>
+              <div class="hidden sm:block w-px h-10 bg-white/20"></div>
+              <div>
+                <div class="text-2xl sm:text-3xl font-bold gradient-text">
+                  10+
+                </div>
+                <div class="text-gray-400 text-xs sm:text-sm">
+                  Projects Done
+                </div>
+              </div>
+              <div class="hidden sm:block w-px h-10 bg-white/20"></div>
+              <div>
+                <div class="text-2xl sm:text-3xl font-bold gradient-text">
+                  2+
+                </div>
+                <div class="text-gray-400 text-xs sm:text-sm">
+                  Years Experience
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative mt-10 lg:mt-0 min-h-[340px]">
+            <div
+              class="relative w-full h-[340px] sm:h-[380px] md:h-[440px] lg:h-[500px]"
+            >
+              <div
+                class="absolute inset-0 bg-gradient-to-br from-sky-500/15 via-blue-500/15 to-indigo-500/15 rounded-3xl glow"
+              ></div>
+
+              <div
+                class="absolute inset-3 sm:inset-4 card-gradient fx-card is-visible fx-live no-tilt backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden"
+              >
+                <div class="hero-visual">
+                  <canvas
+                    id="heroCanvas"
+                    class="hero-canvas"
+                    aria-hidden="true"
+                  ></canvas>
+                  <div
+                    id="heroCanvasFallback"
+                    style="display: none"
+                    class="absolute inset-0 items-center justify-center text-sm text-slate-300/80"
+                  >
+                    Visual loading…
+                  </div>
+
+                  <div class="hero-visual-caption">
+                    <div class="kicker">Building Blocks</div>
+                    <div class="text-sm text-gray-300 leading-snug">
+                      A continuous climb: strong foundations, consistent growth.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="pt-8 pb-10 md:pt-12 md:pb-12 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-10 md:mb-12">
+          <span class="text-sky-400 font-medium">What We Offer</span>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-3 mb-6">
+            Our <span class="gradient-text">Services</span>
+          </h2>
+          <p class="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">
+            We provide comprehensive digital marketing solutions tailored to
+            elevate your brand and drive measurable results.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- SEO -->
+          <div
+            class="service-card card-gradient fx-card rounded-2xl p-6 md:p-8 border border-white/10 transition-all duration-300"
+          >
+            <div
+              class="w-16 h-16 bg-gradient-to-br from-sky-500 to-blue-700 rounded-2xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-8 h-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl md:text-2xl font-bold mb-4">SEO Optimization</h3>
+            <p class="text-gray-400 mb-6 text-sm sm:text-base">
+              Boost your search rankings and drive organic traffic with our
+              data-driven SEO strategies that deliver long-term results.
+            </p>
+            <ul class="space-y-2 text-gray-400 text-sm sm:text-base">
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Keyword Research
+              </li>
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                On-Page SEO
+              </li>
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Technical SEO
+              </li>
+            </ul>
+          </div>
+
+          <!-- Social Media -->
+          <div
+            class="service-card card-gradient fx-card rounded-2xl p-6 md:p-8 border border-white/10 transition-all duration-300"
+          >
+            <div
+              class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-700 rounded-2xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-8 h-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl md:text-2xl font-bold mb-4">
+              Social Media Management
+            </h3>
+            <p class="text-gray-400 mb-6 text-sm sm:text-base">
+              Build a powerful social presence with engaging content and
+              strategic community management across all platforms.
+            </p>
+            <ul class="space-y-2 text-gray-400 text-sm sm:text-base">
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Content Creation
+              </li>
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Community Engagement
+              </li>
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Analytics & Reporting
+              </li>
+            </ul>
+          </div>
+
+          <!-- Ads Campaign -->
+          <div
+            class="service-card card-gradient fx-card rounded-2xl p-6 md:p-8 border border-white/10 transition-all duration-300"
+          >
+            <div
+              class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-blue-900 rounded-2xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-8 h-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl md:text-2xl font-bold mb-4">Ads Campaign</h3>
+            <p class="text-gray-400 mb-6 text-sm sm:text-base">
+              Maximize ROI with targeted advertising campaigns on Google,
+              Facebook, Instagram, and more platforms.
+            </p>
+            <ul class="space-y-2 text-gray-400 text-sm sm:text-base">
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Google Ads
+              </li>
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Facebook & Instagram Ads
+              </li>
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Retargeting Campaigns
+              </li>
+            </ul>
+          </div>
+
+          <!-- Graphic Design -->
+          <div
+            class="service-card card-gradient fx-card rounded-2xl p-6 md:p-8 border border-white/10 transition-all duration-300"
+          >
+            <div
+              class="w-16 h-16 bg-gradient-to-br from-cyan-500 to-sky-700 rounded-2xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-8 h-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl md:text-2xl font-bold mb-4">Graphic Design</h3>
+            <p class="text-gray-400 mb-6 text-sm sm:text-base">
+              Create stunning visuals that capture attention and communicate
+              your brand message effectively.
+            </p>
+            <ul class="space-y-2 text-gray-400 text-sm sm:text-base">
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Brand Identity
+              </li>
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Social Media Graphics
+              </li>
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Marketing Materials
+              </li>
+            </ul>
+          </div>
+
+          <!-- Digital Marketing -->
+          <div
+            class="service-card card-gradient fx-card rounded-2xl p-6 md:p-8 border border-white/10 transition-all duration-300"
+          >
+            <div
+              class="w-16 h-16 bg-gradient-to-br from-sky-600 to-indigo-900 rounded-2xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-8 h-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl md:text-2xl font-bold mb-4">
+              Digital Marketing
+            </h3>
+            <p class="text-gray-400 mb-6 text-sm sm:text-base">
+              Comprehensive digital strategies that combine multiple channels
+              for maximum brand growth and visibility.
+            </p>
+            <ul class="space-y-2 text-gray-400 text-sm sm:text-base">
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Strategy Development
+              </li>
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Email Marketing
+              </li>
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Conversion Optimization
+              </li>
+            </ul>
+          </div>
+
+          <!-- Content Marketing -->
+          <div
+            class="service-card card-gradient fx-card rounded-2xl p-6 md:p-8 border border-white/10 transition-all duration-300"
+          >
+            <div
+              class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-8 h-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl md:text-2xl font-bold mb-4">
+              Content Marketing
+            </h3>
+            <p class="text-gray-400 mb-6 text-sm sm:text-base">
+              Engage your audience with compelling content that educates,
+              entertains, and drives conversions.
+            </p>
+            <ul class="space-y-2 text-gray-400 text-sm sm:text-base">
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Blog Writing
+              </li>
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Video Content
+              </li>
+              <li class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-sky-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Infographics
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section
+      id="about"
+      class="pt-10 pb-8 md:pt-12 md:pb-10 bg-gradient-to-b from-[#05070f] to-[#070b17]"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <div class="relative">
+            <div
+              class="absolute -inset-4 bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-800 rounded-3xl blur-2xl opacity-20"
+            ></div>
+            <div
+              class="fx-card relative bg-gradient-to-br from-white/10 to-white/5 rounded-3xl p-8 border border-white/10"
+            >
+              <div class="grid grid-cols-2 gap-6">
+                <div class="bg-white/5 rounded-2xl p-6 text-center">
+                  <div
+                    class="text-3xl sm:text-4xl font-bold gradient-text mb-2"
+                  >
+                    5+
+                  </div>
+                  <div class="text-gray-400 text-sm">Years of Excellence</div>
+                </div>
+                <div class="bg-white/5 rounded-2xl p-6 text-center">
+                  <div
+                    class="text-3xl sm:text-4xl font-bold gradient-text mb-2"
+                  >
+                    10+
+                  </div>
+                  <div class="text-gray-400 text-sm">Happy Clients</div>
+                </div>
+                <div class="bg-white/5 rounded-2xl p-6 text-center">
+                  <div
+                    class="text-3xl sm:text-4xl font-bold gradient-text mb-2"
+                  >
+                    10+
+                  </div>
+                  <div class="text-gray-400 text-sm">Projects Completed</div>
+                </div>
+                <div class="bg-white/5 rounded-2xl p-6 text-center">
+                  <div
+                    class="text-3xl sm:text-4xl font-bold gradient-text mb-2"
+                  >
+                    5+
+                  </div>
+                  <div class="text-gray-400 text-sm">Team Members</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <span class="text-sky-400 font-medium">About Us</span>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-3 mb-6">
+              We Are <span class="gradient-text">Digihood Studio</span>
+            </h2>
+            <p class="text-gray-400 text-base md:text-lg mb-6 leading-relaxed">
+              Based in the heart of Kathmandu, Nepal, Digihood Studio is a
+              passionate team of digital marketing experts dedicated to helping
+              businesses thrive in the digital landscape.
+            </p>
+            <p
+              class="text-gray-400 text-sm sm:text-base md:text-lg mb-8 leading-relaxed"
+            >
+              Our tagline "Building Blocks" reflects our philosophy. We believe
+              in creating strong digital foundations that support sustainable
+              growth. Every strategy, every campaign, and every design we create
+              is a building block towards your success.
+            </p>
+
+            <div class="space-y-4 mb-6">
+              <div class="flex items-start gap-4">
+                <div
+                  class="w-12 h-12 bg-sky-500/15 rounded-xl flex items-center justify-center"
+                >
+                  <svg
+                    class="w-6 h-6 text-sky-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="font-semibold text-base md:text-lg">
+                    Results-Driven Approach
+                  </div>
+                  <div class="text-gray-400 text-xs sm:text-sm">
+                    We focus on measurable outcomes and ROI
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4">
+                <div
+                  class="w-12 h-12 bg-blue-500/15 rounded-xl flex items-center justify-center"
+                >
+                  <svg
+                    class="w-6 h-6 text-blue-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"
+                    />
+                    <circle
+                      cx="9"
+                      cy="7"
+                      r="4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M23 21v-2a4 4 0 00-3-3.87"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 3.13a4 4 0 010 7.75"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="font-semibold text-base md:text-lg">
+                    Dedicated Team
+                  </div>
+                  <div class="text-gray-400 text-xs sm:text-sm">
+                    Expert professionals committed to your success
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4">
+                <div
+                  class="w-12 h-12 bg-indigo-500/15 rounded-xl flex items-center justify-center"
+                >
+                  <svg
+                    class="w-6 h-6 text-indigo-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="font-semibold text-base md:text-lg">
+                    Innovative Solutions
+                  </div>
+                  <div class="text-gray-400 text-xs sm:text-sm">
+                    Cutting-edge strategies for modern challenges
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="pt-8 pb-10 md:pt-10 md:pb-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="grid lg:grid-cols-2 gap-10 lg:gap-16">
+          <div>
+            <span class="text-sky-400 font-medium">Get In Touch</span>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-3 mb-6">
+              Let's Build Something
+              <span class="gradient-text">Great Together</span>
+            </h2>
+            <p class="text-gray-400 text-base md:text-lg mb-8">
+              Ready to take your digital presence to the next level? Get in
+              touch with us today and let's discuss how we can help your
+              business grow.
+            </p>
+
+            <div class="space-y-6">
+              <div class="flex items-center gap-4">
+                <div
+                  class="w-14 h-14 bg-sky-500/15 rounded-2xl flex items-center justify-center"
+                >
+                  <svg
+                    class="w-6 h-6 text-sky-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 21.75c-2.67-2.614-8-7.07-8-11.25A8 8 0 0112 2.25a8 8 0 018 8.25c0 4.18-5.33 8.636-8 11.25z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 13.5a3 3 0 100-6 3 3 0 000 6z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="font-semibold text-lg">Our Location</div>
+                  <div class="text-gray-400 text-sm">Kathmandu, Nepal</div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-4">
+                <div
+                  class="w-14 h-14 bg-blue-500/15 rounded-2xl flex items-center justify-center"
+                >
+                  <svg
+                    class="w-6 h-6 text-blue-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="font-semibold text-lg">Email Us</div>
+                  <div class="text-gray-400 text-sm">
+                    digihoodstudio@gmail.com
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-4">
+                <div
+                  class="w-14 h-14 bg-indigo-500/15 rounded-2xl flex items-center justify-center"
+                >
+                  <svg
+                    class="w-6 h-6 text-indigo-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="font-semibold text-lg">Call Us</div>
+                  <div class="text-gray-400 text-sm">+977 9705475596</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8">
+              <div class="font-semibold mb-4">Follow Us</div>
+              <div class="flex gap-4">
+                <a
+                  href="#"
+                  class="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center hover:bg-sky-500/10 hover:border-sky-400/40 transition"
+                >
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                    />
+                  </svg>
+                </a>
+                <a
+                  href="#"
+                  class="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center hover:bg-sky-500/10 hover:border-sky-400/40 transition"
+                >
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                    />
+                  </svg>
+                </a>
+                <a
+                  href="#"
+                  class="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center hover:bg-sky-500/10 hover:border-sky-400/40 transition"
+                >
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                    />
+                  </svg>
+                </a>
+                <a
+                  href="#"
+                  class="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center hover:bg-sky-500/10 hover:border-sky-400/40 transition"
+                >
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="card-gradient fx-card rounded-3xl p-6 sm:p-8 md:p-10 border border-white/10"
+          >
+            <h3 class="text-xl md:text-2xl font-bold mb-6">
+              Send Us a Message
+            </h3>
+            <form id="contactForm" class="space-y-6">
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium mb-2"
+                    >Full Name</label
+                  >
+                  <input
+                    type="text"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sky-400/60 transition"
+                    placeholder="Your name"
+                    required
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-2"
+                    >Email Address</label
+                  >
+                  <input
+                    type="email"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sky-400/60 transition"
+                    placeholder="Your email"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium mb-2"
+                  >Service Interested In</label
+                >
+                <div class="relative">
+                  <select
+                    required
+                    class="select-field w-full appearance-none bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-12 focus:outline-none focus:border-sky-400/60 transition"
+                  >
+                    <option value="" disabled selected class="bg-gray-900">
+                      Select a service
+                    </option>
+                    <option value="seo" class="bg-gray-900">
+                      SEO Optimization
+                    </option>
+                    <option value="social" class="bg-gray-900">
+                      Social Media Management
+                    </option>
+                    <option value="ads" class="bg-gray-900">
+                      Ads Campaign
+                    </option>
+                    <option value="design" class="bg-gray-900">
+                      Graphic Design
+                    </option>
+                    <option value="digital" class="bg-gray-900">
+                      Digital Marketing
+                    </option>
+                  </select>
+
+                  <svg
+                    class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 9l6 6 6-6"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium mb-2"
+                  >Your Message</label
+                >
+                <textarea
+                  rows="5"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sky-400/60 transition resize-none"
+                  placeholder="Tell us about your project..."
+                  required
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="btn-primary cursor-pointer w-full px-8 py-4 rounded-xl font-semibold transition flex items-center justify-center gap-2"
+              >
+                Send Message
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#070b17] border-t border-white/10 py-7 md:py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="grid md:grid-cols-4 gap-8 md:gap-12">
+          <div class="md:col-span-2">
+            <a href="/" data-route="/home" class="flex items-center gap-3 mb-4">
+              <div
+                class="brand-badge w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg overflow-hidden select-none"
+                title='Put your logo file named "digilogo.png" next to index.html'
+              >
+                <img
+                  class="company-logo w-full h-full object-contain p-1.5"
+                  src="digilogo.png"
+                  alt="Company logo"
+                  onerror="
+                    this.classList.add('hidden');
+                    this.parentElement
+                      .querySelector('.logo-fallback')
+                      .classList.remove('hidden');
+                  "
+                />
+                <span class="logo-fallback hidden">D</span>
+              </div>
+              <div>
+                <span class="text-lg sm:text-xl font-bold font-display"
+                  >Digihood</span
+                >
+                <span class="text-lg sm:text-xl font-light text-sky-400"
+                  >Studio</span
+                >
+              </div>
+            </a>
+            <p class="text-gray-400 mb-4 max-w-md text-sm sm:text-base">
+              Building Blocks for your digital success. We're a passionate team
+              of digital marketing experts based in Kathmandu, Nepal.
+            </p>
+            <div class="text-gray-500 text-xs sm:text-sm">
+              © 2026 Digihood Studio. All rights reserved.
+            </div>
+          </div>
+
+          <div>
+            <h4 class="font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2 text-sm sm:text-base">
+              <li>
+                <a
+                  href="/home"
+                  data-route="/home"
+                  class="text-gray-400 hover:text-white transition"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/services"
+                  data-route="/services"
+                  class="text-gray-400 hover:text-white transition"
+                  >Services</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/about"
+                  data-route="/about"
+                  class="text-gray-400 hover:text-white transition"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/contact"
+                  data-route="/contact"
+                  class="text-gray-400 hover:text-white transition"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-semibold mb-4">Services</h4>
+            <ul class="space-y-2 text-sm sm:text-base">
+              <li>
+                <a
+                  href="/services"
+                  data-route="/services"
+                  class="text-gray-400 hover:text-white transition"
+                  >SEO Optimization</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/services"
+                  data-route="/services"
+                  class="text-gray-400 hover:text-white transition"
+                  >Social Media</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/services"
+                  data-route="/services"
+                  class="text-gray-400 hover:text-white transition"
+                  >Ads Campaign</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/services"
+                  data-route="/services"
+                  class="text-gray-400 hover:text-white transition"
+                  >Graphic Design</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/services"
+                  data-route="/services"
+                  class="text-gray-400 hover:text-white transition"
+                  >Digital Marketing</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Back to top -->
+    <button
+      id="toTop"
+      class="fixed bottom-6 right-6 z-50 hidden items-center justify-center w-12 h-12 rounded-full bg-white/5 border border-white/10 backdrop-blur-lg hover:bg-white/10 transition"
+      aria-label="Back to top"
+      type="button"
+    >
+      <svg
+        class="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 15l7-7 7 7"
+        />
+      </svg>
+    </button>
+
+    <script>
+      // ----------------------------
+      // Mobile Menu Toggle
+      // ----------------------------
+      const menuBtn = document.getElementById("menuBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      const navbar = document.getElementById("navbar");
+      const scrollProgress = document.getElementById("scrollProgress");
+      const toTop = document.getElementById("toTop");
+
+      menuBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+      });
+
+      // Close mobile menu when clicking a link
+      mobileMenu.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.add("hidden");
+        });
+      });
+
+      // ----------------------------
+      // Form submission
+      // ----------------------------
+      const contactForm = document.getElementById("contactForm");
+      contactForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        alert("Thank you for your message! We will get back to you soon.");
+        contactForm.reset();
+      });
+
+      // ----------------------------
+      // Hashless SPA routing (/home, /services, ...)
+      // ----------------------------
+      const ROUTE_TO_SECTION = {
+        "/": "home",
+        "/home": "home",
+        "/services": "services",
+        "/about": "about",
+        "/contact": "contact",
+      };
+
+      const SECTION_TO_ROUTE = {
+        home: "/home",
+        services: "/services",
+        about: "/about",
+        contact: "/contact",
+      };
+
+      function normalizePath(pathname) {
+        try {
+          pathname = decodeURIComponent(pathname || "/");
+        } catch {
+          // ignore
+        }
+        if (!pathname.startsWith("/")) pathname = "/" + pathname;
+        if (pathname.length > 1 && pathname.endsWith("/")) {
+          pathname = pathname.slice(0, -1);
+        }
+        return pathname;
+      }
+
+      function scrollToSection(sectionId, behavior = "smooth") {
+        const el = document.getElementById(sectionId);
+        if (!el) return;
+
+        const navH = navbar ? navbar.getBoundingClientRect().height : 0;
+        const y = el.getBoundingClientRect().top + window.pageYOffset - navH;
+        window.scrollTo({ top: Math.max(y, 0), behavior });
+      }
+
+      function setActiveNav(routePath) {
+        const norm = normalizePath(routePath);
+        const sectionId = ROUTE_TO_SECTION[norm];
+
+        document.querySelectorAll("a.nav-link[data-route]").forEach((a) => {
+          const aRoute = normalizePath(
+            a.getAttribute("data-route") || a.getAttribute("href") || "",
+          );
+          const active = aRoute === SECTION_TO_ROUTE[sectionId];
+
+          a.classList.toggle("text-white", active);
+          if (a.classList.contains("text-gray-300")) {
+            a.classList.toggle("text-gray-300", !active);
+          }
+
+          a.classList.toggle("nav-active", active);
+        });
+      }
+
+      function navigate(routePath, { replace = false, scroll = true } = {}) {
+        const norm = normalizePath(routePath);
+        const sectionId = ROUTE_TO_SECTION[norm];
+
+        if (!sectionId) {
+          if (scroll) scrollToSection("home", "smooth");
+          return;
+        }
+
+        if (replace) {
+          history.replaceState({ route: norm }, "", norm);
+        } else {
+          history.pushState({ route: norm }, "", norm);
+        }
+
+        setActiveNav(norm);
+        if (scroll) scrollToSection(sectionId, "smooth");
+      }
+
+      function handleInitialRoute() {
+        const path = normalizePath(window.location.pathname);
+        const sectionId = ROUTE_TO_SECTION[path] || "home";
+
+        if (path === "/") {
+          history.replaceState({ route: "/home" }, "", "/home");
+        }
+
+        setActiveNav(SECTION_TO_ROUTE[sectionId] || "/home");
+        scrollToSection(sectionId, "auto");
+      }
+
+      // Intercept internal route links
+      document.addEventListener("click", (e) => {
+        const a = e.target.closest("a");
+        if (!a) return;
+
+        const href = a.getAttribute("href") || "";
+        const route = a.getAttribute("data-route") || href;
+
+        if (
+          href.startsWith("http") ||
+          href.startsWith("mailto:") ||
+          href.startsWith("tel:") ||
+          href.startsWith("#")
+        ) {
+          return;
+        }
+
+        const norm = normalizePath(route);
+        if (ROUTE_TO_SECTION[norm]) {
+          e.preventDefault();
+          navigate(norm);
+          mobileMenu.classList.add("hidden");
+        }
+      });
+
+      window.addEventListener("popstate", () => {
+        const path = normalizePath(window.location.pathname);
+        const sectionId = ROUTE_TO_SECTION[path] || "home";
+        setActiveNav(path);
+        scrollToSection(sectionId, "smooth");
+      });
+
+      // ----------------------------
+      // Scroll spy + UI (progress, navbar chrome, back-to-top)
+      // ----------------------------
+      const SECTION_IDS = ["home", "services", "about", "contact"];
+      let spyTicking = false;
+      let lastSpySection = null;
+      let isProgrammaticScroll = false;
+      let programmaticScrollTimer = null;
+
+      function markProgrammaticScroll() {
+        isProgrammaticScroll = true;
+        clearTimeout(programmaticScrollTimer);
+        programmaticScrollTimer = setTimeout(() => {
+          isProgrammaticScroll = false;
+        }, 650);
+      }
+
+      const _scrollToSection = scrollToSection;
+      scrollToSection = function (sectionId, behavior = "smooth") {
+        markProgrammaticScroll();
+        _scrollToSection(sectionId, behavior);
+      };
+
+      function getActiveSectionId() {
+        const navH = navbar ? navbar.getBoundingClientRect().height : 0;
+        const probeY = window.scrollY + navH + 40;
+
+        let active = "home";
+        for (const id of SECTION_IDS) {
+          const el = document.getElementById(id);
+          if (!el) continue;
+          const top = el.offsetTop;
+          if (top <= probeY) active = id;
+        }
+        return active;
+      }
+
+      function updateProgress() {
+        if (!scrollProgress) return;
+        const docH = document.documentElement.scrollHeight;
+        const winH = window.innerHeight;
+        const max = Math.max(docH - winH, 1);
+        const pct = Math.min(1, Math.max(0, window.scrollY / max));
+        scrollProgress.style.width = (pct * 100).toFixed(2) + "%";
+      }
+
+      function updateNavbarChrome() {
+        const scrolled = window.scrollY > 50;
+        navbar.classList.toggle("bg-[#05070f]/85", scrolled);
+        navbar.classList.toggle("backdrop-blur-lg", scrolled);
+        navbar.classList.toggle("border-b", scrolled);
+        navbar.classList.toggle("border-white/10", scrolled);
+      }
+
+      function updateToTop() {
+        if (!toTop) return;
+
+        // Show ONLY after we've scrolled past the Home section (i.e., reached Services or below)
+        const servicesEl = document.getElementById("services");
+        const navH = navbar ? navbar.getBoundingClientRect().height : 0;
+        const threshold = servicesEl
+          ? Math.max(0, servicesEl.offsetTop - navH - 8)
+          : Infinity;
+
+        const show = window.scrollY >= threshold && window.scrollY > 0;
+        toTop.style.display = show ? "flex" : "none";
+      }
+
+      function updateSpy() {
+        spyTicking = false;
+
+        updateNavbarChrome();
+        updateProgress();
+        updateToTop();
+
+        const activeId = getActiveSectionId();
+        if (activeId !== lastSpySection) {
+          lastSpySection = activeId;
+          const route = SECTION_TO_ROUTE[activeId] || "/home";
+
+          setActiveNav(route);
+
+          if (!isProgrammaticScroll) {
+            const current = normalizePath(window.location.pathname);
+            if (current !== route) {
+              history.replaceState({ route }, "", route);
+            }
+          }
+        }
+      }
+
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (!spyTicking) {
+            spyTicking = true;
+            requestAnimationFrame(updateSpy);
+          }
+        },
+        { passive: true },
+      );
+
+      // Back-to-top uses router
+      if (toTop) {
+        toTop.addEventListener("click", () => navigate("/home"));
+      }
+
+      // ----------------------------
+      // Reveal + 3D Tilt
+      // ----------------------------
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      const tiltCapable =
+        !prefersReducedMotion &&
+        window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+      const fxTargets = Array.from(
+        document.querySelectorAll(".fx-card, .service-card, .card-gradient"),
+      );
+
+      // Ensure everything uses the unified FX class
+      fxTargets.forEach((el) => el.classList.add("fx-card"));
+
+      const revealObserverOptions = {
+        threshold: 0.12,
+        rootMargin: "0px 0px -70px 0px",
+      };
+
+      // Fallback: if IntersectionObserver isn't available, show everything immediately
+      if (typeof IntersectionObserver === "undefined") {
+        fxTargets.forEach((el) => el.classList.add("is-visible", "fx-live"));
+      } else {
+        const revealObserver = new IntersectionObserver((entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+
+            const el = entry.target;
+            el.classList.add("is-visible");
+
+            // After reveal is done, make it "live" (snappier interactions)
+            if (!prefersReducedMotion) {
+              setTimeout(() => el.classList.add("fx-live"), 760);
+            } else {
+              el.classList.add("fx-live");
+            }
+
+            revealObserver.unobserve(el);
+          }
+        }, revealObserverOptions);
+
+        fxTargets.forEach((el) => {
+          if (prefersReducedMotion) {
+            el.classList.add("is-visible", "fx-live");
+            return;
+          }
+          revealObserver.observe(el);
+        });
+      }
+
+      function initTilt(el) {
+        let raf = null;
+
+        const onMove = (e) => {
+          if (e.pointerType && e.pointerType !== "mouse") return;
+
+          const rect = el.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+
+          const x = (e.clientX - rect.left) / rect.width;
+          const y = (e.clientY - rect.top) / rect.height;
+
+          const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+          const cx = clamp(x, 0, 1);
+          const cy = clamp(y, 0, 1);
+
+          const maxDeg = 7.5;
+          const tiltY = (cx - 0.5) * (maxDeg * 2);
+          const tiltX = -(cy - 0.5) * (maxDeg * 2);
+
+          if (raf) cancelAnimationFrame(raf);
+          raf = requestAnimationFrame(() => {
+            el.style.setProperty("--tiltX", tiltX.toFixed(2) + "deg");
+            el.style.setProperty("--tiltY", tiltY.toFixed(2) + "deg");
+            el.style.setProperty("--mx", (cx * 100).toFixed(2) + "%");
+            el.style.setProperty("--my", (cy * 100).toFixed(2) + "%");
+            el.style.setProperty("--shine", "1");
+          });
+        };
+
+        const reset = () => {
+          if (raf) cancelAnimationFrame(raf);
+          el.style.setProperty("--tiltX", "0deg");
+          el.style.setProperty("--tiltY", "0deg");
+          el.style.setProperty("--shine", "0");
+          el.style.setProperty("--press", "1");
+        };
+
+        el.addEventListener("pointermove", onMove);
+        el.addEventListener("pointerleave", reset);
+        el.addEventListener("pointerdown", (e) => {
+          if (e.pointerType && e.pointerType !== "mouse") return;
+          el.style.setProperty("--press", "0.985");
+        });
+        el.addEventListener("pointerup", reset);
+      }
+
+      if (tiltCapable) {
+        fxTargets.forEach((el) => {
+          if (el.classList.contains("no-tilt")) return;
+          initTilt(el);
+        });
+      }
+
+      // ----------------------------
+      // Ambient cursor-driven background
+      // ----------------------------
+      if (
+        !prefersReducedMotion &&
+        window.matchMedia("(hover: hover) and (pointer: fine)").matches
+      ) {
+        let bgRaf = null;
+
+        window.addEventListener(
+          "pointermove",
+          (e) => {
+            if (e.pointerType && e.pointerType !== "mouse") return;
+            if (bgRaf) cancelAnimationFrame(bgRaf);
+            bgRaf = requestAnimationFrame(() => {
+              const x = (e.clientX / window.innerWidth) * 100;
+              const y = (e.clientY / window.innerHeight) * 100;
+              document.documentElement.style.setProperty(
+                "--cursorX",
+                x.toFixed(2) + "%",
+              );
+              document.documentElement.style.setProperty(
+                "--cursorY",
+                y.toFixed(2) + "%",
+              );
+              document.documentElement.style.setProperty(
+                "--cursorX2",
+                (100 - x).toFixed(2) + "%",
+              );
+              document.documentElement.style.setProperty(
+                "--cursorY2",
+                Math.min(95, y + 10).toFixed(2) + "%",
+              );
+            });
+          },
+          { passive: true },
+        );
+      }
+
+      // ----------------------------
+      // Hero Canvas Visual (reliable everywhere)
+      // ----------------------------
+      function initHeroCanvas() {
+        const canvas = document.getElementById("heroCanvas");
+        const fallback = document.getElementById("heroCanvasFallback");
+        if (!canvas) return;
+
+        if (fallback) fallback.style.display = "none";
+
+        const ctx = canvas.getContext("2d", {
+          alpha: true,
+          desynchronized: true,
+        });
+        if (!ctx) {
+          if (fallback) fallback.style.display = "flex";
+          return;
+        }
+
+        const parent = canvas.parentElement;
+        let w = 0;
+        let h = 0;
+        let dpr = Math.min(2, window.devicePixelRatio || 1);
+
+        const reduced = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        if (reduced) {
+          // Draw a nice static frame and stop.
+          // We'll still resize so it looks correct.
+        }
+
+        function resize() {
+          const rect = parent.getBoundingClientRect();
+          w = Math.max(1, Math.floor(rect.width));
+          h = Math.max(1, Math.floor(rect.height));
+          dpr = Math.min(2, window.devicePixelRatio || 1);
+          canvas.width = Math.floor(w * dpr);
+          canvas.height = Math.floor(h * dpr);
+          canvas.style.width = w + "px";
+          canvas.style.height = h + "px";
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
+
+        // Isometric projection
+        function iso(x, y, z) {
+          // axis: x -> right-down, y -> left-down, z -> up
+          const scale = 1;
+          const ix = (x - y) * scale;
+          const iy = (x + y) * 0.55 * scale - z;
+          return { x: ix, y: iy };
+        }
+
+        function drawCube(cx, cy, size, height, colors, alpha = 1) {
+          const s = size;
+          const hgt = height;
+
+          // corners in iso-space
+          // base square (x,y) from (0,0) to (s,s)
+          const p0 = iso(0, 0, 0);
+          const p1 = iso(s, 0, 0);
+          const p2 = iso(s, s, 0);
+          const p3 = iso(0, s, 0);
+
+          const t0 = iso(0, 0, hgt);
+          const t1 = iso(s, 0, hgt);
+          const t2 = iso(s, s, hgt);
+          const t3 = iso(0, s, hgt);
+
+          const ox = cx;
+          const oy = cy;
+
+          ctx.save();
+          ctx.globalAlpha = alpha;
+
+          // right face (p1,p2,t2,t1)
+          ctx.beginPath();
+          ctx.moveTo(ox + p1.x, oy + p1.y);
+          ctx.lineTo(ox + p2.x, oy + p2.y);
+          ctx.lineTo(ox + t2.x, oy + t2.y);
+          ctx.lineTo(ox + t1.x, oy + t1.y);
+          ctx.closePath();
+          ctx.fillStyle = colors.right;
+          ctx.fill();
+
+          // left face (p0,p3,t3,t0)
+          ctx.beginPath();
+          ctx.moveTo(ox + p0.x, oy + p0.y);
+          ctx.lineTo(ox + p3.x, oy + p3.y);
+          ctx.lineTo(ox + t3.x, oy + t3.y);
+          ctx.lineTo(ox + t0.x, oy + t0.y);
+          ctx.closePath();
+          ctx.fillStyle = colors.left;
+          ctx.fill();
+
+          // top face (t0,t1,t2,t3)
+          ctx.beginPath();
+          ctx.moveTo(ox + t0.x, oy + t0.y);
+          ctx.lineTo(ox + t1.x, oy + t1.y);
+          ctx.lineTo(ox + t2.x, oy + t2.y);
+          ctx.lineTo(ox + t3.x, oy + t3.y);
+          ctx.closePath();
+          ctx.fillStyle = colors.top;
+          ctx.fill();
+
+          // subtle outline
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = "rgba(255,255,255,0.08)";
+          ctx.stroke();
+
+          // sheen highlight
+          const grad = ctx.createLinearGradient(
+            ox + t0.x,
+            oy + t0.y,
+            ox + t2.x,
+            oy + t2.y,
+          );
+          grad.addColorStop(0, "rgba(255,255,255,0.10)");
+          grad.addColorStop(0.45, "rgba(255,255,255,0.02)");
+          grad.addColorStop(1, "rgba(255,255,255,0.00)");
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          ctx.restore();
+        }
+
+        function drawOrb(x, y, r) {
+          const g = ctx.createRadialGradient(
+            x - r * 0.25,
+            y - r * 0.25,
+            1,
+            x,
+            y,
+            r,
+          );
+          g.addColorStop(0, "rgba(255,255,255,0.95)");
+          g.addColorStop(0.25, "rgba(56,189,248,0.95)");
+          g.addColorStop(0.7, "rgba(37,99,235,0.35)");
+          g.addColorStop(1, "rgba(37,99,235,0)");
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        function drawRubik(x, y, size, t) {
+          // 2D fake-3D rotating cube (still looks premium & “rubik-like”)
+          // We draw a tilted square prism with animated hue shift.
+          const ang = t * 0.0012;
+          const tilt = 0.72;
+
+          const s = size;
+          const dx = Math.cos(ang) * s * 0.28;
+          const dy = Math.sin(ang) * s * 0.18;
+
+          const top = {
+            top: "rgba(255,255,255,0.10)",
+            left: "rgba(56,189,248,0.80)",
+            right: "rgba(37,99,235,0.90)",
+          };
+
+          // base center
+          const cx = x;
+          const cy = y;
+
+          // top diamond
+          ctx.save();
+          ctx.translate(cx + dx, cy + dy);
+
+          ctx.beginPath();
+          ctx.moveTo(0, -s * 0.55);
+          ctx.lineTo(s * 0.62, -s * 0.15);
+          ctx.lineTo(0, s * 0.25);
+          ctx.lineTo(-s * 0.62, -s * 0.15);
+          ctx.closePath();
+          ctx.fillStyle = top.top;
+          ctx.fill();
+
+          // left face
+          ctx.beginPath();
+          ctx.moveTo(-s * 0.62, -s * 0.15);
+          ctx.lineTo(0, s * 0.25);
+          ctx.lineTo(0, s * (0.25 + tilt));
+          ctx.lineTo(-s * 0.62, s * (-0.15 + tilt));
+          ctx.closePath();
+          ctx.fillStyle = top.left;
+          ctx.fill();
+
+          // right face
+          ctx.beginPath();
+          ctx.moveTo(s * 0.62, -s * 0.15);
+          ctx.lineTo(0, s * 0.25);
+          ctx.lineTo(0, s * (0.25 + tilt));
+          ctx.lineTo(s * 0.62, s * (-0.15 + tilt));
+          ctx.closePath();
+          ctx.fillStyle = top.right;
+          ctx.fill();
+
+          // grid overlay
+          ctx.globalAlpha = 0.22;
+          ctx.strokeStyle = "rgba(0,0,0,0.8)";
+          ctx.lineWidth = 2;
+          const gridN = 3;
+          for (let i = 1; i < gridN; i++) {
+            const k = i / gridN;
+            // top grid
+            ctx.beginPath();
+            ctx.moveTo(-s * 0.62 + s * 0.62 * k, -s * 0.15 - s * 0.4 * k);
+            ctx.lineTo(s * 0.62 * k, s * 0.25 - s * 0.4 * k);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(s * 0.62 - s * 0.62 * k, -s * 0.15 - s * 0.4 * k);
+            ctx.lineTo(-(s * 0.62) * k, s * 0.25 - s * 0.4 * k);
+            ctx.stroke();
+          }
+          ctx.globalAlpha = 1;
+
+          // outline + shadow
+          ctx.strokeStyle = "rgba(255,255,255,0.12)";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(-s * 0.78, -s * 0.72, s * 1.56, s * 1.56);
+
+          ctx.restore();
+        }
+
+        let raf = null;
+        const start = performance.now();
+
+        function frame(now) {
+          raf = requestAnimationFrame(frame);
+
+          // clear
+          ctx.clearRect(0, 0, w, h);
+
+          // ambient vignette
+          const vg = ctx.createRadialGradient(
+            w * 0.5,
+            h * 0.45,
+            40,
+            w * 0.5,
+            h * 0.45,
+            Math.max(w, h) * 0.75,
+          );
+          vg.addColorStop(0, "rgba(56,189,248,0.05)");
+          vg.addColorStop(0.35, "rgba(37,99,235,0.05)");
+          vg.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = vg;
+          ctx.fillRect(0, 0, w, h);
+
+          // staircase layout
+          const steps = 8;
+          const size = clamp(Math.min(w, h) * 0.13, 38, 68);
+          const height = size * 0.72;
+
+          // anchor in center-ish
+          const baseX = w * 0.44;
+          const baseY = h * 0.66;
+
+          // draw from back to front for correct overlap
+          for (let i = steps - 1; i >= 0; i--) {
+            const tx = i * (size * 0.98);
+            const ty = 0;
+            const tz = i * (height * 0.62);
+
+            const p = iso(tx, ty, tz);
+            const bob = Math.sin((now - start) * 0.001 + i * 0.55) * 3.2;
+
+            const colors = {
+              top: `rgba(255,255,255,${0.14 + i * 0.004})`,
+              left: `rgba(56,189,248,${0.22 + i * 0.012})`,
+              right: `rgba(37,99,235,${0.24 + i * 0.012})`,
+            };
+            drawCube(baseX + p.x, baseY + p.y + bob, size, height, colors, 1);
+          }
+
+          // runner orb climbing
+          const t = (now - start) * 0.00018;
+          const k = t % 1;
+          const idx = k * (steps - 1);
+          const i0 = Math.floor(idx);
+          const i1 = Math.min(steps - 1, i0 + 1);
+          const f = idx - i0;
+
+          function stepPos(i) {
+            const tx = i * (size * 0.98);
+            const tz = i * (height * 0.62);
+            const p = iso(tx + size * 0.5, size * 0.5, tz + height * 0.8);
+            return { x: baseX + p.x, y: baseY + p.y };
+          }
+
+          const pA = stepPos(i0);
+          const pB = stepPos(i1);
+          const orbX = pA.x + (pB.x - pA.x) * f;
+          const orbY = pA.y + (pB.y - pA.y) * f - 30;
+          drawOrb(orbX, orbY, clamp(size * 0.16, 8, 14));
+
+          // rubik cube in top-right area
+          drawRubik(
+            w * 0.72,
+            h * 0.28,
+            clamp(Math.min(w, h) * 0.16, 56, 92),
+            now,
+          );
+
+          // subtle particles
+          ctx.globalAlpha = 0.18;
+          ctx.fillStyle = "rgba(255,255,255,0.65)";
+          for (let i = 0; i < 18; i++) {
+            const px = w * 0.15 + ((i * 97) % 230);
+            const py = h * 0.18 + ((i * 131 + now * 0.02) % (h * 0.8));
+            ctx.fillRect(px, py, 1.2, 1.2);
+          }
+          ctx.globalAlpha = 1;
+        }
+
+        function drawStatic() {
+          const now = performance.now();
+          // render one frame
+          const saved = raf;
+          raf = null;
+          // temporarily call frame logic without scheduling
+          ctx.clearRect(0, 0, w, h);
+          const vg = ctx.createRadialGradient(
+            w * 0.5,
+            h * 0.45,
+            40,
+            w * 0.5,
+            h * 0.45,
+            Math.max(w, h) * 0.75,
+          );
+          vg.addColorStop(0, "rgba(56,189,248,0.05)");
+          vg.addColorStop(0.35, "rgba(37,99,235,0.05)");
+          vg.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = vg;
+          ctx.fillRect(0, 0, w, h);
+
+          const steps = 8;
+          const size = clamp(Math.min(w, h) * 0.13, 38, 68);
+          const height = size * 0.72;
+          const baseX = w * 0.44;
+          const baseY = h * 0.66;
+
+          for (let i = steps - 1; i >= 0; i--) {
+            const tx = i * (size * 0.98);
+            const tz = i * (height * 0.62);
+            const p = iso(tx, 0, tz);
+            const colors = {
+              top: `rgba(255,255,255,${0.14 + i * 0.004})`,
+              left: `rgba(56,189,248,${0.22 + i * 0.012})`,
+              right: `rgba(37,99,235,${0.24 + i * 0.012})`,
+            };
+            drawCube(baseX + p.x, baseY + p.y, size, height, colors, 1);
+          }
+
+          drawOrb(w * 0.46, h * 0.45, 10);
+          drawRubik(
+            w * 0.72,
+            h * 0.28,
+            clamp(Math.min(w, h) * 0.16, 56, 92),
+            now,
+          );
+
+          raf = saved;
+        }
+
+        const ro = new ResizeObserver(() => {
+          resize();
+          if (reduced) drawStatic();
+        });
+        ro.observe(parent);
+        resize();
+
+        if (reduced) {
+          drawStatic();
+          return;
+        }
+
+        raf = requestAnimationFrame(frame);
+
+        // cleanup
+        window.addEventListener(
+          "beforeunload",
+          () => {
+            if (raf) cancelAnimationFrame(raf);
+            ro.disconnect();
+          },
+          { once: true },
+        );
+      }
+
+      // Init
+      window.addEventListener("DOMContentLoaded", () => {
+        handleInitialRoute();
+        // Ensure UI elements (Top button/progress/nav chrome) are correct immediately.
+        updateToTop();
+        updateProgress();
+        updateNavbarChrome();
+        initHeroCanvas();
+        requestAnimationFrame(updateSpy);
+      });
+    </script>
+  </body>
+</html>
